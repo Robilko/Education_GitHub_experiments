@@ -1,3 +1,8 @@
 package com.example.githubtests.presenter
 
-internal interface PresenterContract {}
+import com.example.githubtests.view.ViewContract
+
+internal interface PresenterContract {
+    fun onAttach(view: ViewContract)
+    fun onDetach()
+}
