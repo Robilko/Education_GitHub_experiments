@@ -150,4 +150,21 @@ class SearchPresenterTest {
         //Убеждаемся, что ответ от сервера обрабатывается корректно
         verify(viewContract, times(1)).displaySearchResults(searchResults, 101)
     }
+
+    @Test
+    fun onDetach_Test() {
+        //Детачим нашу активити (viewContract) и вызывем через презентер метод этой активити. Так как она теперь равна null, вызванный метод не отработает ни разу
+        presenter.onDetach()
+        presenter.handleGitHubError()
+        verify(viewContract, times(0)).displayError()
+    }
+
+    @Test
+    fun onAttach_Test() {
+        //Детачим и затем снова аттачим нашу активити (viewContract) и вызывем через презентер метод этой активити. Так как она приатачилась, вызванный метод отработает
+        presenter.onDetach()
+        presenter.onAttach(viewContract)
+        presenter.handleGitHubError()
+        verify(viewContract, times(1)).displayError()
+    }
 }
