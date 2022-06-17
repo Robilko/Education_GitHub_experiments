@@ -2,19 +2,24 @@ package com.example.githubtests.view.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
+import com.example.githubtests.BuildConfig
 import com.example.githubtests.R
 import com.example.githubtests.databinding.ActivityMainBinding
 import com.example.githubtests.model.SearchResult
 import com.example.githubtests.presenter.search.PresenterSearchContract
 import com.example.githubtests.presenter.search.SearchPresenter
+import com.example.githubtests.repository.FakeGitHubRepository
 import com.example.githubtests.repository.GitHubApi
 import com.example.githubtests.repository.GitHubRepository
+import com.example.githubtests.repository.RepositoryContract
 import com.example.githubtests.view.details.DetailsActivity
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
@@ -85,8 +90,12 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         })
     }
 
-    private fun createRepository(): GitHubRepository {
-        return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
+    private fun createRepository(): RepositoryContract {
+        return if (BuildConfig.TYPE == FAKE) {
+            FakeGitHubRepository()
+        } else {
+            GitHubRepository(createRetrofit().create(GitHubApi::class.java))
+        }
     }
 
     private fun createRetrofit(): Retrofit {
@@ -97,6 +106,10 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     }
 
     override fun displaySearchResults(searchResults: List<SearchResult>, totalCount: Int) {
+        with(binding.totalCountTextView) {
+            this.visibility = View.VISIBLE
+            this.text = String.format(Locale.getDefault(), getString(R.string.results_count), totalCount)
+        }
         this.totalCount = totalCount
         adapter.updateResults(searchResults)
     }
@@ -116,5 +129,6 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     companion object {
         const val BASE_URL = "https://api.github.com"
         const val SEARCH_QUERY = "SEARCH_QUERY"
+        const val FAKE = "FAKE"
     }
 }

@@ -36,6 +36,20 @@ android {
         }
     }
 
+    flavorDimensions "default"
+    productFlavors {
+        fake {
+            applicationIdSuffix ".fake"
+            versionNameSuffix "-fake"
+            buildConfigField "String", "TYPE", '"FAKE"'
+        }
+        real {
+            applicationIdSuffix ".real"
+            versionNameSuffix "-real"
+            buildConfigField "String", "TYPE", '"REAL"'
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }
