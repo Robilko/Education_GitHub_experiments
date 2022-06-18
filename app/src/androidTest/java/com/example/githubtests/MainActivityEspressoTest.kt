@@ -26,6 +26,7 @@ import org.junit.runner.RunWith
 class MainActivityEspressoTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
+    private val fake = "FAKE"
 
     @Before
     fun setup() {
@@ -111,7 +112,7 @@ class MainActivityEspressoTest {
         onView(withId(R.id.searchEditText)).perform(replaceText("algol"), closeSoftKeyboard())
         onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
 
-        if (BuildConfig.TYPE == MainActivity.FAKE) {
+        if (BuildConfig.TYPE == fake) {
             onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 42")))
         } else {
             onView(isRoot()).perform(delay())
