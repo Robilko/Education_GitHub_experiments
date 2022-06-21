@@ -3,16 +3,10 @@ package com.example.githubtests.automator
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
-import com.example.githubtests.R
+import androidx.test.uiautomator.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -94,5 +88,17 @@ class BehaviorTest {
         // Обратите внимание, что текст должен быть "Number of results: 0",
         //так как мы кликаем по кнопке не отправляя никаких поисковых запросов.
         Assert.assertEquals(changedText.text, "Number of results: 0")
+    }
+
+    @Test //Тест на то что после успешного выполнения запроса и получения нужного количества репозиториев, DetailsScreen отображает именно это количество
+    fun test_OpenDetailsScreenWithQuery() {
+        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
+        editText.text = "fffsda"
+        uiDevice.findObject(By.res(packageName, "searchButton")).click()
+        uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
+        uiDevice.findObject(By.res(packageName, "toDetailsActivityButton")).click()
+        uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
+        val changedText = uiDevice.findObject(By.textStartsWith("Number of results:"))
+        Assert.assertEquals(changedText.text, "Number of results: 1")
     }
 }
