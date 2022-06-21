@@ -87,4 +87,7 @@ dependencies {
 
     //Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    //UI Automator
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
