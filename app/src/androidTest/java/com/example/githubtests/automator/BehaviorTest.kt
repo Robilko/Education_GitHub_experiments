@@ -75,6 +75,13 @@ class BehaviorTest {
         Assert.assertNotNull(changedText)
     }
 
+    @Test
+    fun test_SearchIsNegative() {
+        uiDevice.findObject(By.res(packageName, "searchButton")).click()
+        val changedText = uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
+        Assert.assertNull(changedText)
+    }
+
     /** Убеждаемся, что DetailsScreen открывается */
     @Test
     fun test_OpenDetailsScreen() {
@@ -100,5 +107,29 @@ class BehaviorTest {
         uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
         val changedText = uiDevice.findObject(By.textStartsWith("Number of results:"))
         Assert.assertEquals(changedText.text, "Number of results: 1")
+    }
+
+    @Test //Тестируем кнопку "+" на экране DetailsScreen
+    fun test_DetailsScreenPlusButton() {
+        uiDevice.findObject(By.res(packageName, "toDetailsActivityButton")).click()
+        uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
+        val changedText = uiDevice.findObject(By.textStartsWith("Number of results:"))
+        Assert.assertEquals(changedText.text, "Number of results: 0")
+        uiDevice.findObject(By.res(packageName, "incrementButton")).click()
+        Assert.assertEquals(changedText.text, "Number of results: 1")
+        uiDevice.findObject(By.res(packageName, "incrementButton")).click()
+        Assert.assertEquals(changedText.text, "Number of results: 2")
+    }
+
+    @Test //Тестируем кнопку "-" на экране DetailsScreen
+    fun test_DetailsScreenMinusButton() {
+        uiDevice.findObject(By.res(packageName, "toDetailsActivityButton")).click()
+        uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
+        val changedText = uiDevice.findObject(By.textStartsWith("Number of results:"))
+        Assert.assertEquals(changedText.text, "Number of results: 0")
+        uiDevice.findObject(By.res(packageName, "decrementButton")).click()
+        Assert.assertEquals(changedText.text, "Number of results: -1")
+        uiDevice.findObject(By.res(packageName, "decrementButton")).click()
+        Assert.assertEquals(changedText.text, "Number of results: -2")
     }
 }
