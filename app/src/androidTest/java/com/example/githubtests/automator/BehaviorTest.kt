@@ -71,8 +71,9 @@ class BehaviorTest {
         val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
         //Устанавливаем значение
         editText.text = "UiAutomator"
-        //Отправляем запрос через Espresso
-        Espresso.onView(ViewMatchers.withId(R.id.searchEditText)).perform(ViewActions.pressImeActionButton())
+        //Через uiDevice находим кнопку searchButton и имитируем клик по ней
+        val searchButton = uiDevice.findObject(By.res(packageName, "searchButton"))
+        searchButton.click()
         //Ожидаем конкретного события: появления текстового поля totalCountTextView. Это будет означать, что сервер вернул ответ с какими-то данными, то есть запрос отработал.
         val changedText = uiDevice.wait(Until.findObject(By.res(packageName, "totalCountTextView")), TIMEOUT)
         //Убеждаемся, что сервер вернул корректный результат. Обратите внимание, что количество
