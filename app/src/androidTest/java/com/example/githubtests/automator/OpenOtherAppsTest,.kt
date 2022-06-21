@@ -4,6 +4,7 @@ import android.widget.TextView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
@@ -49,6 +50,20 @@ class OpenOtherAppsTest {
         //Убеждаемся, что Настройки открыты
         val settingsValidation = uiDevice.findObject(UiSelector().packageName("com.android.settings"))
         Assert.assertTrue(settingsValidation.exists())
+    }
 
+    @Test //Открываем приложение "Часы" и нажимаем на разные вкладки этого приложения
+    fun test_OpenClockApp() {
+        uiDevice.pressHome()
+        uiDevice.swipe(uiDevice.displayWidth/2, uiDevice.displayHeight-50, uiDevice.displayWidth/2, 0, 10)
+        val appViews = UiScrollable(UiSelector())
+        val clockApp = appViews.getChildByText(UiSelector().className(TextView::class.java), "Часы")
+        clockApp.clickAndWaitForNewWindow()
+        val timerButton = uiDevice.findObject(By.textContains("Таймер"))
+        val clockButton = uiDevice.findObject(By.textContains("Часы"))
+        val stopwatchButton = uiDevice.findObject(By.textContains("Секундомер"))
+        timerButton.click()
+        clockButton.click()
+        stopwatchButton.click()
     }
 }
