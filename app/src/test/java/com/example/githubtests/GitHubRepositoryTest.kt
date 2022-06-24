@@ -30,7 +30,7 @@ class GitHubRepositoryTest {
 
     @Test
     fun searchGithub_Test() {
-        val searchQuery = "some query"
+        val searchQuery = TEST_SOME_SEARCH_QUERY_ALGOL
         val call = mock(Call::class.java) as Call<SearchResponse?>
 
         `when`(gitHubApi.searchGithub(searchQuery)).thenReturn(call)
@@ -40,7 +40,7 @@ class GitHubRepositoryTest {
 
     @Test
     fun searchGithub_TestCallback() {
-        val searchQuery = "some query"
+        val searchQuery = TEST_SOME_SEARCH_QUERY_ALGOL
         val response = mock(Response::class.java) as Response<SearchResponse?>
         val gitHubRepositoryCallBack = mock(RepositoryCallback::class.java)
 
@@ -87,7 +87,7 @@ class GitHubRepositoryTest {
 
     @Test
     fun searchGithub_TestCallback_WithMock() {
-        val searchQuery = "some query"
+        val searchQuery = TEST_SOME_SEARCH_QUERY_ALGOL
         val call = mock(Call::class.java) as Call<SearchResponse?>
         val callBack = mock(Callback::class.java) as Callback<SearchResponse?>
         val gitHubRepositoryCallBack = mock(RepositoryCallback::class.java)

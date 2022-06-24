@@ -8,6 +8,12 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
+import com.example.githubtests.*
+import com.example.githubtests.APP_NAME_CLOCK
+import com.example.githubtests.APP_NAME_SETTINGS
+import com.example.githubtests.CLOCK_APP_BUTTON_CLOCK
+import com.example.githubtests.CLOCK_APP_BUTTON_TIMER
+import com.example.githubtests.PACKAGE_NAME_SETTINGS
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,11 +50,11 @@ class OpenOtherAppsTest {
         uiDevice.swipe(uiDevice.displayWidth/2, uiDevice.displayHeight-50, uiDevice.displayWidth/2, 0, 10)
         val appViews = UiScrollable(UiSelector())
         //Находим в контейнере настройки по названию иконки
-        val settingsApp = appViews.getChildByText(UiSelector().className(TextView::class.java),"Настройки")
+        val settingsApp = appViews.getChildByText(UiSelector().className(TextView::class.java), APP_NAME_SETTINGS)
         //Открываем
         settingsApp.clickAndWaitForNewWindow()
         //Убеждаемся, что Настройки открыты
-        val settingsValidation = uiDevice.findObject(UiSelector().packageName("com.android.settings"))
+        val settingsValidation = uiDevice.findObject(UiSelector().packageName(PACKAGE_NAME_SETTINGS))
         Assert.assertTrue(settingsValidation.exists())
     }
 
@@ -57,13 +63,10 @@ class OpenOtherAppsTest {
         uiDevice.pressHome()
         uiDevice.swipe(uiDevice.displayWidth/2, uiDevice.displayHeight-50, uiDevice.displayWidth/2, 0, 10)
         val appViews = UiScrollable(UiSelector())
-        val clockApp = appViews.getChildByText(UiSelector().className(TextView::class.java), "Часы")
+        val clockApp = appViews.getChildByText(UiSelector().className(TextView::class.java), APP_NAME_CLOCK)
         clockApp.clickAndWaitForNewWindow()
-        val timerButton = uiDevice.findObject(By.textContains("Таймер"))
-        val clockButton = uiDevice.findObject(By.textContains("Часы"))
-        val stopwatchButton = uiDevice.findObject(By.textContains("Секундомер"))
-        timerButton.click()
-        clockButton.click()
-        stopwatchButton.click()
+        uiDevice.findObject(By.textContains(CLOCK_APP_BUTTON_TIMER)).click()
+        uiDevice.findObject(By.textContains(CLOCK_APP_BUTTON_CLOCK)).click()
+        uiDevice.findObject(By.textContains(CLOCK_APP_BUTTON_STOPWATCH)).click()
     }
 }
