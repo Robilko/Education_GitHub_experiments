@@ -26,7 +26,6 @@ import org.junit.runner.RunWith
 class MainActivityEspressoTest {
 
     private lateinit var scenario: ActivityScenario<MainActivity>
-    private val fake = "FAKE"
 
     @Before
     fun setup() {
@@ -85,7 +84,7 @@ class MainActivityEspressoTest {
     @Test // Проверка на видимость элемента с id "totalCountTextView", после выполнения запроса к API
     fun activity_TotalCountTextView_IsVisible() {
         onView(withId(R.id.searchEditText)).perform(click())
-            .perform(replaceText("algol"), closeSoftKeyboard())
+            .perform(replaceText(TEST_SOME_SEARCH_QUERY_ALGOL), closeSoftKeyboard())
             .perform(pressImeActionButton())
         onView(isRoot()).perform(delay())
         onView(withId(R.id.totalCountTextView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
@@ -98,28 +97,28 @@ class MainActivityEspressoTest {
 
     @Test // Проверка отображения корректного текста с подсказкой на элементе с id "searchEditText"
     fun activity_EditTextIsCorrectHintText() {
-        onView(withId(R.id.searchEditText)).check(matches(withHint("Enter keyword e.g. android")))
+        onView(withId(R.id.searchEditText)).check(matches(withHint(TEST_HINT_EDITTEXT)))
     }
 
     @Test //Проверка отображения корректного текста на кнопке с id "toDetailsActivityButton"
     fun activity_ButtonToDetails_IsCorrectText() {
-        onView(withId(R.id.toDetailsActivityButton)).check(matches(withText("to details")))
+        onView(withId(R.id.toDetailsActivityButton)).check(matches(withText(TEST_TO_DETAILS_BUTTON_TEXT)))
     }
 
     @Test
     fun activitySearch_IsWorking() {
         onView(withId(R.id.searchEditText)).perform(click())
-        onView(withId(R.id.searchEditText)).perform(replaceText("algol"), closeSoftKeyboard())
+        onView(withId(R.id.searchEditText)).perform(replaceText(TEST_SOME_SEARCH_QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
 
-        if (BuildConfig.TYPE == fake) {
-            onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 42")))
+        if (BuildConfig.TYPE == FAKE_BUILDCONFIG) {
+            onView(withId(R.id.totalCountTextView)).check(matches(withText(FAKE_RESULTS)))
         } else {
             onView(isRoot()).perform(delay())
             //Внимание!
             //Перед тем как запускать тест, убедитесь в правильном количестве репозиториев. Скорее всего
             //оно будет меняться, несмотря на редкость языка (Algol).
-            onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3082")))
+            onView(withId(R.id.totalCountTextView)).check(matches(withText(TEST_SOME_SEARCH_RESULTS)))
         }
     }
 
@@ -138,7 +137,7 @@ class MainActivityEspressoTest {
     fun activity_ButtonToDetails_IsWorking() {
         onView(withId(R.id.toDetailsActivityButton)).perform(click())
         onView(withId(R.id.totalCountTextView)).check(matches(isDisplayed()))
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 0")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(TEST_NUMBER_OF_RESULTS_ZERO)))
     }
 
     // Функция для реализации задержки
@@ -146,7 +145,7 @@ class MainActivityEspressoTest {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> = isRoot()
 
-            override fun getDescription(): String = "wait for $2 seconds"
+            override fun getDescription(): String = TEST_DELAY_DESCRIPTION
 
             /** perform() занимается непосредственно Action’ом: нас интересует UiController, у
             которого есть нужный нам метод. Мы “замораживаем” UI на 2 секунды. Этого
