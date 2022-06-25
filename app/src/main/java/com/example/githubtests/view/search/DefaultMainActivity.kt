@@ -82,6 +82,15 @@ abstract class DefaultMainActivity : AppCompatActivity(), ViewSearchContract {
             }
             false
         })
+
+        binding.searchButton.setOnClickListener {
+            val query = binding.searchEditText.text.toString()
+            if (query.isNotBlank()) {
+                presenter.searchGitHub(query)
+            } else {
+                Toast.makeText(this, getString(R.string.enter_search_word), Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     internal abstract fun createRepository(): RepositoryContract
