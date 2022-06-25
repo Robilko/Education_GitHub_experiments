@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     private lateinit var binding: ActivityMainBinding
     private val adapter = SearchResultAdapter()
-    private val presenter: PresenterSearchContract = SearchPresenter(this, createRepository())
+    private lateinit var presenter: PresenterSearchContract
     private var totalCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,12 +31,35 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     }
 
     private fun setUI() {
+        presenter = SearchPresenter(createRepository())
+        presenter.onAttach(this)
         binding.toDetailsActivityButton.setOnClickListener {
             startActivity(DetailsActivity.getIntent(this, totalCount))
         }
         setQueryListener()
         setRecyclerView()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDetach()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (adapter.itemCount > 0) {
+            val searchQueryFromEditText = binding.searchEditText.text.toString()
+            outState.putString(SEARCH_QUERY, searchQueryFromEditText)
+            presenter.onDetach()
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        presenter.onAttach(this)
+        val query = savedInstanceState.getString(SEARCH_QUERY)
+        query?.let { presenter.searchGitHub(it) }
     }
 
     private fun setRecyclerView() {
@@ -79,18 +102,19 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     }
 
     override fun displayError() {
-        TODO("Not yet implemented")
+
     }
 
     override fun displayError(error: String) {
-        TODO("Not yet implemented")
+
     }
 
     override fun displayLoading(show: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     companion object {
         const val BASE_URL = "https://api.github.com"
+        const val SEARCH_QUERY = "SEARCH_QUERY"
     }
 }
