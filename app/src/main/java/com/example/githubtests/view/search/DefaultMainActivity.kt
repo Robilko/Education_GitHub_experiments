@@ -1,22 +1,21 @@
 package com.example.githubtests.view.search
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.githubtests.R
 import com.example.githubtests.databinding.ActivityMainBinding
 import com.example.githubtests.model.SearchResult
 import com.example.githubtests.presenter.search.PresenterSearchContract
 import com.example.githubtests.presenter.search.SearchPresenter
-import com.example.githubtests.repository.GitHubApi
-import com.example.githubtests.repository.GitHubRepository
+import com.example.githubtests.repository.RepositoryContract
 import com.example.githubtests.view.details.DetailsActivity
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
-class MainActivity : AppCompatActivity(), ViewSearchContract {
+abstract class DefaultMainActivity : AppCompatActivity(), ViewSearchContract {
 
     private lateinit var binding: ActivityMainBinding
     private val adapter = SearchResultAdapter()
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
                     presenter.searchGitHub(query)
                     return@OnEditorActionListener true
                 } else {
-                    Toast.makeText(this@MainActivity, getString(R.string.enter_search_word), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.enter_search_word), Toast.LENGTH_LONG).show()
                     return@OnEditorActionListener false
                 }
             }
@@ -85,18 +84,13 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         })
     }
 
-    private fun createRepository(): GitHubRepository {
-        return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
-    }
-
-    private fun createRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
+    internal abstract fun createRepository(): RepositoryContract
 
     override fun displaySearchResults(searchResults: List<SearchResult>, totalCount: Int) {
+        with(binding.totalCountTextView) {
+            this.visibility = View.VISIBLE
+            this.text = String.format(Locale.getDefault(), getString(R.string.results_count), totalCount)
+        }
         this.totalCount = totalCount
         adapter.updateResults(searchResults)
     }

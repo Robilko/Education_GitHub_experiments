@@ -1,7 +1,8 @@
 package com.example.githubtests.presenter.search
 
 import com.example.githubtests.model.SearchResponse
-import com.example.githubtests.repository.GitHubRepository
+import com.example.githubtests.repository.RepositoryCallback
+import com.example.githubtests.repository.RepositoryContract
 import com.example.githubtests.view.ViewContract
 import com.example.githubtests.view.search.ViewSearchContract
 import retrofit2.Response
@@ -14,8 +15,8 @@ import retrofit2.Response
  * выступая в роли регулировщика движения на перекрестке.
  */
 internal class SearchPresenter internal constructor(
-    private val repository: GitHubRepository
-) : PresenterSearchContract, GitHubRepository.GitHubRepositoryCallback {
+    private val repository: RepositoryContract
+) : PresenterSearchContract, RepositoryCallback{
 
     private var viewContract: ViewSearchContract? = null
 
